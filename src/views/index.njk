@@ -1,0 +1,57 @@
+{% extends 'base.njk' %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" type="text/css" href="./index.css" />
+{% endblock %}
+
+{% block body %}
+  <main>
+    <div class="form">
+      <p>
+        Convert your LSDSNG data to HTML, JSON, or even a MIDI file.
+      </p>
+      <p>
+        Choose .lsdsng or .lsdprj file, select output type, and click convert.
+      </p>
+
+      <form id="uploadForm" action="/d" enctype="multipart/form-data" method="post">
+        <p>
+          <input type="file" id="file" name="upload" accept=".lsdsng, .lsdprj">
+        </p>
+        <p>
+          <input type="radio" id="htmlradio" name="output" value="html" checked>
+          <label for="htmlradio">HTML</label>
+          <input type="radio" id="jsonradio" name="output" value="json">
+          <label for="jsonradio">JSON</label>
+          <input type="radio" id="midiradio" name="output" value="midi">
+          <label for="midiradio">MIDI</label>
+        </p>
+        <p>
+          <input type="submit" id="submit" value="Convert">
+        </p>
+      </form>
+    </div>
+    <div class="render">
+      <iframe id="render-iframe" border="0" src="/b" height="100%" width="100%"></iframe>
+    </div>
+  </main>
+{% endblock %}
+
+{% block scripts %}
+  <script type="text/javascript">
+    const form = document.querySelector('#uploadForm');
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      fetch('/d', {
+        method: 'POST',
+        body: new FormData(form),
+      })
+      .then(response => response.text())
+      .then(data => {
+        document.querySelector('#render-iframe').srcdoc = data;
+      });
+    });
+  </script>
+{% endblock %}

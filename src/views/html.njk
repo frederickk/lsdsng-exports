@@ -1,0 +1,167 @@
+{% extends 'base.njk' %}
+
+{# {% set chain = chain | default('--') %}
+{% set transpose = transpose | default('--') %}
+{% set instrument = instrument | default('--') %}
+{% set phrase = phrase | default('--') %} #}
+
+{% block stylesheets %}
+  <link rel="stylesheet" type="text/css" href="./song.css" />
+{% endblock %}
+
+{% block body %}
+  <main class="song__container">
+    <div class="song">
+      {# Metadata header row #}
+      <div class="row row__metadata">
+        <div class="col"></div>
+        <div class="col">
+          NAME<br>
+          {{ title }}
+        </div>
+        <div class="col">
+          VERSION<br>
+          {{ lsdsng.version }}.{{ lsdsng.ver }}
+        </div>
+        <div class="col">
+          TEMPO<br>
+          {{ lsdsng.tempo }}
+        </div>
+        <div class="col">
+          CLOCK<br>
+          ◴ {{ lsdsng.clock.hours }}:{{ lsdsng.clock.minutes }}
+        </div>
+      </div>
+      {# Channel header row #}
+      <div class="row">
+        <div class="col"></div>
+        <div class="col">
+          PU1
+        </div>
+        <div class="col">
+          PU2
+        </div>
+        <div class="col">
+          WAV
+        </div>
+        <div class="col">
+          NOI
+        </div>
+      </div>
+
+      {# Start parsing Song data #}
+      {% for i in range(0, 256) %}
+        <div class="row" onclick="expand('#r{{ i }}')">
+          <div class="col">
+            {{ loop.index0 | format(loop.index0) }}
+          </div>
+
+          {% for j in range(0, defaults.CHANS.length) %}
+            {% set chain = lsdsng.songchains[defaults.CHANS[j]][i] %}
+            {% if chain == 255 %}
+              {% set chain = '--' %}
+            {% endif %}
+
+            <div class="col col__title">
+              {{ chain | format(chain) }}
+            </div>
+          {% endfor %}
+        </div>
+
+        <div class="row__chain" id="r{{ i }}" style="visibility: collapse">
+          <div class="col__channel"></div>
+
+          {# Create chain rows #}
+          {% for j in range(0, defaults.CHANS.length) %}
+            <div class="col__channel">
+            {% set chain = lsdsng.songchains[defaults.CHANS[j]][i] %}
+            {% if chain == 255 %}
+              {% set chain = '--' %}
+            {% endif %}
+
+            {% for k in range(0, 16) %}
+              {% if chain == '--' %}
+
+              {% else %}
+                {# Show Transpose #}
+                {# TODO: implement transpose into the note display #}
+                {% set transpose = lsdsng.chains.transpose[chain][k] %}
+                {% if transpose > 127 %}
+                  {% set transpose = transpose - 256 %}
+                {% endif %}
+
+                {# Show Phrase #}
+                {% set phrase = lsdsng.chains.phrases[chain][k] %}
+                {% if phrase == 255 %}
+                  {% set phrase = '--' %}
+                {% endif %}
+
+                <div class="row__chain-details">
+                  <div class="col__chain-index">
+                    {{ phrase | format(phrase) }}
+                  </div>
+                  <div class="col__chain-details">
+                    {% for l in range(0, 16) %}
+                      {% if phrase != '--' %}
+                        {{ l | format(l) }}
+                      {% endif %}
+
+                      {# Show Note #}
+                      {% set note = lsdsng.phrases.notes[phrase][l] %}
+                      {% if note != 0 %}
+                        {% if note + transpose <= 0 %}
+                          {% set note = defaults.TRANSPOSE[(((note + transpose) % 12) + 12) % 12] %}
+                        {% else %}
+                          {% set note = defaults.NOTES[note + transpose] %}
+                        {% endif %}
+                      {% else %}
+                        {% set note = defaults.NOTES[0] %}
+                      {% endif %}
+                      {{ note | replace(' ', '&puncsp;') | safe }}
+
+                      {# Show Instrument #}
+                      {% set instrument = lsdsng.phrases.instruments[phrase][l] %}
+                      {% if instrument == 255 %}
+                        {% set instrument = '--' %}
+                      {% endif %}
+                      I{{ instrument | format(instrument) }}
+
+                      {# Show Commands/Effects #}
+                      {% set fx = lsdsng.phrases.fx[phrase][l] %}
+                      {% set fxVal = lsdsng.phrases.fxval[phrase][l] %}
+                      {% if fx == 255 %}
+                        {% set fx = '--' %}
+                      {% endif %}
+                      {{ defaults.EFFECTS[fx] }} {{ fxVal | format(fxVal) }}<br>
+
+                    {% endfor %}
+                  </div>
+                </div>
+
+              {% endif %}
+
+            {% endfor %}
+            </div>
+
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+  </main>
+
+  <details>
+    <summary>JSON Song data</summary>
+    <pre>
+{{ lsdsng | dump(2) | safe }}
+    </pre>
+  </details>
+{% endblock %}
+
+{% block javascripts %}
+  <script type="text/javascript">
+    function expand(selector) {
+      const elem = document.querySelector(selector);
+      elem.style.visibility = (elem.style.visibility === 'collapse') ? 'visible' : 'collapse';
+    }
+  </script>
+{% endblock %}

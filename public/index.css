@@ -1,0 +1,71 @@
+:root {
+  --black: #000;
+  --white: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --black: #fff;
+    --white: #000;
+    }
+}
+
+body {
+  background-color: var(--white);
+  box-sizing: border-box;
+  color: var(--black);
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+  width: 100%;
+}
+
+main {
+  display: grid;
+  grid-template-columns: 45ch 1fr;
+  grid-template-areas: "form render";
+  height: 100%;
+}
+
+main .form {
+  grid-area: form;
+  padding: var(--spacer--xl);
+}
+
+main .render {
+  grid-area: render;
+  padding: 0;
+}
+
+iframe {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+input[type=radio] {
+  display: none;
+  position: absolute;
+  visibility: hidden;
+}
+input[type=radio]:checked + label {
+  background-color: var(--dark-grey);
+}
+
+input[type=submit] {
+  background-color: var(--pink);
+  border: 0;
+  border-color: var(--black);
+  border-radius: var(--spacer--md);
+  cursor: pointer;
+  padding: var(--spacer--sm) var(--spacer--lg);
+}
+
+label {
+  border-color: var(--black);
+  border-radius: var(--spacer--md);
+  border-style: solid;
+  cursor: pointer;
+  display: inline-block;
+  padding: var(--spacer--sm) var(--spacer--lg);
+}

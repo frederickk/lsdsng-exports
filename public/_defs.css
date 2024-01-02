@@ -1,0 +1,37 @@
+:root {
+  --black: #FFF;
+  --light-grey: #CCC;
+  --dark-grey: #999;
+  --pink: #FDF;
+  --white: #00F;
+
+  --background--100: url('data:image/gif;base64,R0lGODlhAgACAPABAP///wAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFAAABACwAAAAAAgACAAACA0QCBQA7');
+  --background--50: url('data:image/gif;base64,R0lGODlhBAAEAPABAP///wAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFAAABACwAAAAABAAEAAACBUR+ZhhWADs=');
+  --background--25: url('data:image/gif;base64,R0lGODlhBgAGAPABAP///wAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFAAABACwAAAAABgAGAEACB0SOmabHzQoAOw==');
+  --font-family: 'SF Mono', SFMono-Regular, ui-monospace;
+  --spacer--sm: 5px;
+  --spacer--md: 10px;
+  --spacer--lg: 20px;
+  --spacer--xl: 50px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --black: #000;
+    --light-grey: #333;
+    --dark-grey: #666;
+    --pink: #FDF;
+    --white: #CCF;
+  }
+}
+
+* {
+  font-family: var(--font-family);
+  font-size: 13px;
+}
+
+code,
+pre {
+  color: var(--white);
+  white-space: pre;
+}

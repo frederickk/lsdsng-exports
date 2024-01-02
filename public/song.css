@@ -1,0 +1,74 @@
+body {
+  background-color: var(--white);
+  color: var(--black);
+  padding: var(--spacer--xl);
+}
+
+main,
+main.song__container {
+  display: block;
+  text-transform: uppercase;
+  width: 100%;
+}
+
+.song {
+  display: table;
+  width: 100%;
+}
+
+.song .row {
+  cursor: ns-resize;
+  display: table-row;
+  height: 3em;
+}
+
+.song .row__metadata {
+  height: 6em;
+}
+
+.song .row__chain {
+  background-image: var(--background--25);
+  display: table-row;
+}
+
+.song .row__chain-details {
+  align-items: stretch;
+  display: inline-flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.song .col {
+  border-top: 1px solid var(--black);
+  display: table-cell;
+  min-width: 20ch;
+  padding: var(--spacer--sm) var(--spacer--sm);
+  width: 20ch;
+}
+
+.song .col__title {
+  background-image: var(--background--25);
+  display: table-cell;
+}
+
+.song .col__channel {
+  border-top: 1px dotted var(--black);
+  display: table-cell;
+  min-width: 20ch;
+}
+
+.song .col__chain-index {
+  display: table-cell;
+  padding: var(--spacer--sm) var(--spacer--sm);
+}
+
+.song .col__chain-details {
+  flex-grow: 1;
+  font-family: var(--font-family);
+  padding: var(--spacer--sm) var(--spacer--sm);
+  padding-inline-end: 4ch;
+  text-align: justify;
+  text-align-last: justify;
+  white-space: nowrap;
+  width: 100%;
+}
