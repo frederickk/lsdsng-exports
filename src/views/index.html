@@ -1,0 +1,30 @@
+<html>
+  <head>
+      <link rel="stylesheet" type="text/css" href="styles.css" />
+      <title>lsdsng to html/json/midi</title>
+  </head>
+  <body>
+    <p>
+      Convert your LSDSNG data to HTML, JSON, or even a MIDI file.
+      <br><br>
+      Choose .lsdsng or .lsdprj file, select output type, and click convert.
+    </p>
+
+    <form id="uploadForm" action="/" enctype="multipart/form-data" method="post">
+      <p>
+        <input type="file" id="file" name="upload" accept=".lsdsng, .lsdprj">
+      </p>
+      <p>    
+        <input type="radio" id="htmlradio" name="output" value="html" checked>
+        <label for="htmlradio">HTML</label>
+        <input type="radio" id="jsonradio" name="output" value="json">
+        <label for="jsonradio">JSON</label>
+        <input type="radio" id="midiradio" name="output" value="midi">
+        <label for="midiradio">MIDI</label>
+      </p>
+      <p>
+        <input type="submit" id="submit" value="Convert" action="/">    
+      </p>
+    </form>
+  </body>
+</html>
