@@ -32,6 +32,6 @@
 
 code,
 pre {
-  color: var(--white);
+  color: var(--black);
   white-space: pre;
 }

@@ -1,2 +1,5 @@
 assets/
 node_modules/
+
+**/*/og_*
+**/*/ref_*
