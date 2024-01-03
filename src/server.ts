@@ -1,8 +1,10 @@
 import express, { Request, Response } from 'express';
 import fs from 'fs'
+import { writeFile } from 'fs/promises';
 import http from 'http'
 import formidable from 'formidable';
-import { gzip, ungzip, inflate } from 'pako';
+import { Buffer } from 'buffer';
+import { gzip, ungzip } from 'pako';
 import * as bodyParser from 'body-parser';
 import * as nunjucks from 'nunjucks';
 import * as path from 'path';
@@ -45,8 +47,6 @@ app.get('/b', (_req: Request, res: Response) => {
   });
 });
 
-import { Buffer } from 'buffer';
-
 app.get('/j', (req: Request, res: Response) => {
   const data = req.query.data;
   let jsonObj = {
@@ -64,22 +64,28 @@ app.get('/j', (req: Request, res: Response) => {
   res.send(jsonObj);
 });
 
+app.get('/m/:filename', (req: Request, res: Response) => {
+  const filename = req.params.filename;
+  const file = `/tmp/${filename}`;
+  res.sendFile(file);
+});
+
 app.post('/d', (req: Request, res: Response) => {
-  const form = new formidable.IncomingForm();
+  const form = formidable({});
   let lsdsngObj: LsdsngObj;
   let output: any;
   let title: string;
 
   form.parse(req, (_err, fields: any, _files) => {
-    output = fields.output;
+    output = fields.output[0];
   });
 
   form.on('fileBegin', (_formName, file: any) => {
-    title = file.name.split('.')[0];
+    title = file.originalFilename.split('.')[0];
   });
 
   form.on('file', (_formName, file: any) => {
-    fs.readFile(file.path, (_err, data) => {
+    fs.readFile(file.filepath, async (_err, data) => {
       try {
         lsdsngObj = unpack(data);
       } catch (err) {
@@ -94,13 +100,14 @@ app.post('/d', (req: Request, res: Response) => {
           title,
         }));
       } else if (output === 'midi') {
-      //   const midi: Uint8Array = makeMIDI(lsdsngObj);
-      //   res.writeHead(200, {
-      //     'Content-Type': 'application/octet-stream',
-      //     'Content-disposition': `attachment;filename=${title}.mid`,
-      //     'Content-Length': midi.length,
-      //   });
-      //   res.end(Buffer.from(midi));
+        const midi: Uint8Array = makeMIDI(lsdsngObj);
+        const midiFile = `${title}.mid`;
+        await writeFile(`/tmp/${midiFile}`, Buffer.from(midi));
+
+        res.send(nunjucks.render('./midi.njk', {
+          title,
+          midiFile,
+        }));
       } else {
         const compressed = gzip(JSON.stringify(lsdsngObj));
         const base64Compressed = Buffer.from(compressed).toString('base64');
@@ -114,7 +121,6 @@ app.post('/d', (req: Request, res: Response) => {
     });
   });
 });
-
 
 const server = http.createServer(app);
 

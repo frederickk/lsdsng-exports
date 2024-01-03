@@ -1,0 +1,31 @@
+{% extends 'base.njk' %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block body %}
+  <a href="/m/{{ midiFile }}" target="_blank">{{ midiFile }}</a>
+  <hr>
+  <main>
+    <midi-player
+      src="/m/{{ midiFile }}"
+      visualizer="main midi-visualizer"
+      sound-font
+      loop>
+    </midi-player>
+    <midi-visualizer
+      type="piano-roll"
+      src="/m/{{ midiFile }}">
+    </midi-visualizer>
+    <midi-visualizer
+      type="staff"
+      src="/m/{{ midiFile }}">
+    </midi-visualizer>
+  </main>
+
+{% endblock %}
+
+{% block scripts %}
+  <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.5.0"></script>
+{% endblock %}
